@@ -1,0 +1,20 @@
+# Vagrant
+.vagrant/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Java build artifacts
+target/
+
+# Temporary files
+*.swp
+*.tmp

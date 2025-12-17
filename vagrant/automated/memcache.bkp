@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+log() { echo "[memcache.sh] $*"; }
+
+pkg_installed() { rpm -q "$1" >/dev/null 2>&1; }
+
+ensure_pkg() {
+  local pkg="$1"
+  if pkg_installed "$pkg"; then
+    log "Package already installed: $pkg"
+  else
+    log "Installing package: $pkg"
+    sudo dnf -y install "$pkg"
+  fi
+}
+
+ensure_service() {
+  local svc="$1"
+  log "Enabling + starting service: $svc"
+  sudo systemctl enable --now "$svc"
+}
+
+log "Updating package metadata"
+sudo dnf -y makecache
+
+ensure_pkg epel-release
+ensure_pkg memcached
+
+# Configure memcached to listen on all interfaces (Vagrant private network)
+# On CentOS/RHEL family, this is typically set via /etc/sysconfig/memcached
+CFG="/etc/sysconfig/memcached"
+
+if [ -f "$CFG" ]; then
+  # If OPTIONS contains -l 127.0.0.1, replace it. If it contains -l something else, normalize to 0.0.0.0.
+  # If it has no -l flag, append one safely.
+  log "Configuring memcached listen address in $CFG"
+
+  if grep -qE '(^|\s)-l\s+127\.0\.0\.1' "$CFG"; then
+    sudo sed -i -E 's/(^|\s)-l\s+127\.0\.0\.1/ -l 0.0.0.0/g' "$CFG"
+  elif grep -qE '(^|\s)-l\s+' "$CFG"; then
+    sudo sed -i -E 's/(^|\s)-l\s+[^ ]+/ -l 0.0.0.0/g' "$CFG"
+  else
+    # Try to append to OPTIONS="..."
+    if grep -qE '^OPTIONS=' "$CFG"; then
+      sudo sed -i -E 's/^OPTIONS="(.*)"/OPTIONS="\1 -l 0.0.0.0"/' "$CFG"
+    else
+      # Fallback: add an OPTIONS line
+      echo 'OPTIONS="-l 0.0.0.0"' | sudo tee -a "$CFG" >/dev/null
+    fi
+  fi
+else
+  log "WARNING: $CFG not found. Memcached may use a different config path on this box."
+fi
+
+ensure_service memcached
+
+# Restart to ensure config applies
+log "Restarting memcached"
+sudo systemctl restart memcached
+
+# Firewall (optional but common in labs)
+if systemctl list-unit-files | grep -q '^firewalld\.service'; then
+  ensure_service firewalld
+
+  log "Opening memcached ports in firewalld (if not already open)"
+  # TCP 11211
+  if ! sudo firewall-cmd --zone=public --query-port=11211/tcp >/dev/null 2>&1; then
+    sudo firewall-cmd --zone=public --add-port=11211/tcp --permanent
+  fi
+  # UDP 11111 (only if you truly need UDP; memcached UDP is often disabled for security)
+  if ! sudo firewall-cmd --zone=public --query-port=11111/udp >/dev/null 2>&1; then
+    sudo firewall-cmd --zone=public --add-port=11111/udp --permanent
+  fi
+
+  sudo firewall-cmd --reload
+else
+  log "firewalld not installed; skipping firewall configuration"
+fi
+
+log "Validating memcached is active"
+sudo systemctl is-active --quiet memcached && log "memcached is active"
+
+log "Done."

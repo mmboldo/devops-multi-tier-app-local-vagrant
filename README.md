@@ -14,11 +14,21 @@ This project demonstrates infrastructure provisioning, service orchestration, an
 
 ## Stack Components
 
-- Nginx (Reverse Proxy) — web01 (Ubuntu 22.04)
-- Tomcat (Java App Server) — app01 (CentOS Stream 9)
-- MariaDB / MySQL (Database) — db01 (CentOS Stream 9)
-- Memcached (User Cache) — mc01 (CentOS Stream 9)
-- RabbitMQ (Message Broker) — rmq01 (CentOS Stream 9)
+**Nginx (Reverse Proxy) — web01 (Ubuntu 22.04)**
+  Acts as a reverse proxy, accepting HTTP traffic and forwarding requests
+  to the application server.
+  
+**Tomcat (Java App Server) — app01 (CentOS Stream 9)**
+  Hosts the Java web application (WAR) and handles business logic.
+
+**MariaDB / MySQL (Database) — db01 (CentOS Stream 9)**
+  Stores application data and user information.
+
+**Memcached (User Cache) — mc01 (CentOS Stream 9)**
+  Provides in-memory caching for user/session-related data.
+
+**RabbitMQ (Message Broker) — rmq01 (CentOS Stream 9)**
+  Handles asynchronous messaging between application components.
 
 ---
 
@@ -36,9 +46,9 @@ Tested on Windows (Git Bash / PowerShell), macOS, and Linux hosts.
 ## How to Run
 
 Bring up the full environment by running the below command from the folder vagrant/automated:
-
+```bash
 vagrant up
-
+```
 This will:
 - Create all virtual machines
 - Provision system services
@@ -46,9 +56,9 @@ This will:
 - Configure service-to-service communication
 
 Check VM status:
-
+```bash
 vagrant status
-
+```
 ---
 
 ## Application Access
@@ -82,6 +92,26 @@ Known issues and troubleshooting notes are documented in:
 
 ---
 
+## Key Characteristics
+
+- Multi-VM environment
+- Mixed Linux distributions (Ubuntu + CentOS Stream)
+- Infrastructure provisioned via shell scripts
+- Reverse proxy + app server pattern
+- Stateful vs stateless separation
+- Local environment simulating production topology
+
+---
+
+## Project Intent
+
+- Designing and provisioning a realistic multi-tier architecture
+- Integrating heterogeneous services across multiple hosts
+- Debugging service startup, networking, and dependency issues
+- Applying operational discipline through verification and documentation
+
+---
+
 ## DevOps Practices Demonstrated
 
 - Automated infrastructure provisioning
@@ -96,9 +126,9 @@ Known issues and troubleshooting notes are documented in:
 ## Cleanup
 
 To destroy all virtual machines and free resources:
-
+```bash
 vagrant destroy -f
-
+```
 ---
 
 ## Author

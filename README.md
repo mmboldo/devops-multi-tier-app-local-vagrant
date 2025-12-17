@@ -14,20 +14,25 @@ This project demonstrates infrastructure provisioning, service orchestration, an
 
 ## Stack Components
 
-**Nginx (Reverse Proxy) — web01 (Ubuntu 22.04)**
+**Nginx (Reverse Proxy)** — web01 (Ubuntu 22.04)
+
   Acts as a reverse proxy, accepting HTTP traffic and forwarding requests
   to the application server.
   
-**Tomcat (Java App Server) — app01 (CentOS Stream 9)**
+**Tomcat (Java App Server)** — app01 (CentOS Stream 9)
+
   Hosts the Java web application (WAR) and handles business logic.
 
-**MariaDB / MySQL (Database) — db01 (CentOS Stream 9)**
+**MariaDB / MySQL (Database)** — db01 (CentOS Stream 9)
+
   Stores application data and user information.
 
-**Memcached (User Cache) — mc01 (CentOS Stream 9)**
+**Memcached (User Cache)** — mc01 (CentOS Stream 9)
+
   Provides in-memory caching for user/session-related data.
 
-**RabbitMQ (Message Broker) — rmq01 (CentOS Stream 9)**
+**RabbitMQ (Message Broker)** — rmq01 (CentOS Stream 9)
+
   Handles asynchronous messaging between application components.
 
 ---

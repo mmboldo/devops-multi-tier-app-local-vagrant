@@ -8,17 +8,7 @@ This project demonstrates infrastructure provisioning, service orchestration, an
 
 ## Architecture Overview
 
-Client / Browser
-        |
-        v
-Nginx (web01) - Reverse Proxy
-        |
-        v
-Tomcat (app01) - Java Application Server
-   |        |        |
-   v        v        v
-MariaDB   Memcached  RabbitMQ
-(db01)     (mc01)     (rmq01)
+![Multi-Tier Architecture Diagram](docs/architecture.png)
 
 ---
 

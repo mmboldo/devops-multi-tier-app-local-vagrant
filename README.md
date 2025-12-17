@@ -22,31 +22,6 @@ This project demonstrates infrastructure provisioning, service orchestration, an
 
 ---
 
-## Repository Structure
-
-.
-├── README.md
-├── VERIFY.md
-├── KNOWN_ISSUES.md
-├── Makefile
-├── pom.xml
-├── src/
-│   └── main/
-│       └── java/
-│           └── application source code
-└── vagrant/
-    └── automated/
-        ├── Vagrantfile
-        ├── application.properties
-        ├── mysql.sh
-        ├── memcache.sh
-        ├── rabbitmq.sh
-        ├── tomcat.sh
-        ├── nginx.sh
-        └── backend.sh
-
----
-
 ## Prerequisites
 
 - Vagrant
@@ -60,7 +35,7 @@ Tested on Windows (Git Bash / PowerShell), macOS, and Linux hosts.
 
 ## How to Run
 
-Bring up the full environment:
+Bring up the full environment by running the below command from the folder vagrant/automated:
 
 vagrant up
 
@@ -88,7 +63,7 @@ http://web01
 
 A complete verification guide is available in:
 
-VERIFY.md
+[VERIFY.md](VERIFY.md)
 
 It covers:
 - Service health checks
@@ -101,9 +76,9 @@ It covers:
 
 ## Known Issues & Lessons Learned
 
-Documented provisioning issues, fixes, and lessons learned are available in:
+Known issues and troubleshooting notes are documented in:
 
-KNOWN_ISSUES.md
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md)
 
 ---
 
@@ -123,16 +98,6 @@ KNOWN_ISSUES.md
 To destroy all virtual machines and free resources:
 
 vagrant destroy -f
-
----
-
-## Future Improvements
-
-- Replace shell provisioning with Ansible
-- Add CI pipeline (Jenkins or GitHub Actions)
-- Introduce secrets management
-- Add observability (metrics and logs)
-- Containerized deployment variant
 
 ---
 
